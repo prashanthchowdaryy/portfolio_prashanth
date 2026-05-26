@@ -563,24 +563,39 @@
   }
   .about-inner {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 4rem;
-    align-items: center;
-    max-width: 800px;
+    grid-template-columns: 380px 1fr;
+    gap: clamp(3rem,5vw,6rem);
+    align-items: start;
+    max-width: 1200px;
     margin: 0 auto;
   }
-  .about-left { display: none; }
+  .about-left {
+    display: block;
+    position: sticky;
+    top: 7rem;
+  }
   .about-img-wrap {
     position: relative;
-    aspect-ratio: 3/4;
+    aspect-ratio: 4/5;
+    overflow: visible;
+  }
+  /* Main portrait frame */
+  .about-img-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/5;
     overflow: hidden;
     background: var(--ink3);
+    border: 1px solid rgba(214,180,138,0.12);
   }
-  .about-img-wrap::after {
+  .about-img-frame::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(192,132,87,0.2) 0%, transparent 60%);
+    background: linear-gradient(160deg, rgba(192,132,87,0.18) 0%, transparent 55%),
+                linear-gradient(to top, rgba(10,10,10,0.5) 0%, transparent 40%);
+    z-index: 1;
+    pointer-events: none;
   }
   .about-img-inner {
     width: 100%;
@@ -591,40 +606,103 @@
     justify-content: center;
     overflow: hidden;
   }
+  /* Big initials as placeholder */
   .about-img-placeholder {
     font-family: 'Playfair Display', serif;
-    font-size: 8rem;
-    color: rgba(214,180,138,0.1);
+    font-size: clamp(7rem, 14vw, 11rem);
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(214,180,138,0.14);
     font-style: italic;
+    user-select: none;
+    letter-spacing: -0.04em;
   }
-  .about-accent-box {
+  /* Gold corner accents */
+  .about-img-frame::after {
+    content: '';
     position: absolute;
-    bottom: -2rem;
-    right: -2rem;
-    width: 180px;
-    height: 180px;
-    border: 1px solid rgba(214,180,138,0.15);
+    top: 12px; left: 12px;
+    width: 40px; height: 40px;
+    border-top: 1px solid rgba(214,180,138,0.5);
+    border-left: 1px solid rgba(214,180,138,0.5);
+    z-index: 2;
+    pointer-events: none;
+  }
+  .about-corner-br {
+    position: absolute;
+    bottom: 12px; right: 12px;
+    width: 40px; height: 40px;
+    border-bottom: 1px solid rgba(214,180,138,0.5);
+    border-right: 1px solid rgba(214,180,138,0.5);
+    z-index: 2;
+    pointer-events: none;
+  }
+  /* Floating stat cards on the image */
+  .about-float-card {
+    position: absolute;
+    background: rgba(10,10,10,0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(214,180,138,0.2);
+    padding: 0.9rem 1.2rem;
+    z-index: 3;
+  }
+  .about-float-card.card-loc {
+    bottom: -1.2rem;
+    left: -1.5rem;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    background: var(--ink2);
-    gap: 0.5rem;
+    gap: 0.7rem;
   }
-  .about-accent-box strong {
-    font-family: 'Playfair Display', serif;
-    font-size: 3rem;
-    color: var(--gold);
-    font-weight: 400;
-    line-height: 1;
+  .about-float-card.card-loc .loc-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+    box-shadow: 0 0 10px rgba(214,180,138,0.6);
+    animation: locPulse 2s ease-in-out infinite;
   }
-  .about-accent-box span {
+  @keyframes locPulse {
+    0%,100% { box-shadow: 0 0 10px rgba(214,180,138,0.6); }
+    50% { box-shadow: 0 0 18px rgba(214,180,138,1); }
+  }
+  .about-float-card.card-loc .loc-text {
     font-size: 0.6rem;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: rgba(245,239,230,0.7);
+  }
+  .about-float-card.card-avail {
+    top: 1.5rem;
+    right: -1.5rem;
     text-align: center;
   }
+  .about-float-card.card-avail .avail-label {
+    display: block;
+    font-size: 0.5rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.25rem;
+  }
+  .about-float-card.card-avail .avail-status {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.85rem;
+    color: #4ade80;
+    letter-spacing: 0.05em;
+  }
+  /* Offset decorative frame line */
+  .about-img-deco-line {
+    position: absolute;
+    bottom: -2.5rem;
+    right: -2.5rem;
+    width: calc(100% - 2rem);
+    height: calc(100% - 2rem);
+    border: 1px solid rgba(214,180,138,0.07);
+    z-index: 0;
+    pointer-events: none;
+  }
+  .about-img-wrap { position: relative; }
   .about-right {}
   .about-heading {
     font-family: 'Playfair Display', serif;
@@ -1683,7 +1761,12 @@
     /* ── ABOUT ── */
     #about { padding: 3.5rem 1.4rem 2rem; }
     .story-ambient-num { display: none; }
-    .about-inner { max-width: 100%; }
+    .about-inner { max-width: 100%; grid-template-columns: 1fr; gap: 2.5rem; }
+    .about-left { position: static; }
+    .about-img-frame { max-width: 280px; margin: 0 auto; }
+    .about-float-card.card-avail { right: 0; top: 1rem; }
+    .about-float-card.card-loc { left: 0; bottom: -0.5rem; }
+    .about-img-deco-line { display: none; }
     .about-heading { font-size: clamp(2rem, 8vw, 3.2rem); margin: 1rem 0 0; }
     .about-body { font-size: 0.88rem; line-height: 1.75; margin-bottom: 1rem; }
     .about-stats { gap: 0; display: grid; grid-template-columns: repeat(3,1fr); margin-top: 1.2rem; padding-top: 1.2rem; }
@@ -1760,6 +1843,7 @@
     .hero-eyebrow { display: none; }
     .btn-primary, .btn-outline { padding: 0.8rem 1.3rem; font-size: 0.6rem; }
     #about { padding: 3rem 1.2rem 1.5rem; }
+    .about-img-frame { max-width: 240px; }
     .about-heading { font-size: clamp(1.8rem, 9vw, 2.8rem); }
     .about-stats { grid-template-columns: repeat(3,1fr); }
     #experience { padding: 3rem 1.2rem 1.5rem; }
@@ -1770,6 +1854,13 @@
     /* Reduce React section inner padding */
     #react-about-extras > div { padding: 0 1.2rem 2rem !important; }
     #react-experience-root > div { padding: 0 1.2rem !important; }
+  }
+
+  @media (max-width: 1100px) {
+    .about-inner { grid-template-columns: 300px 1fr; gap: 3rem; }
+  }
+  @media (max-width: 900px) {
+    .about-inner { grid-template-columns: 1fr !important; }
   }
 
   /* ─── REACT PROJECTS ISLAND — mobile ─── */
@@ -1832,7 +1923,7 @@
       <span class="loader-name-line"><span>CHOWDARY</span></span>
     </div>
 
-    <div class="loader-subtitle">Portfolio · 2026</div>
+    <div class="loader-subtitle">Hyderabad · India</div>
 
     <div class="loader-progress-wrap">
       <div class="loader-progress-track">
@@ -1923,35 +2014,37 @@
 </section>
 
 <!-- MARQUEE -->
-<div class="marquee-section">
-  <div class="marquee-track">
-    <span class="marquee-item">Data Analysis</span>
-    <span class="marquee-item accent">·</span>
-    <span class="marquee-item">Power BI Dashboards</span>
-    <span class="marquee-item accent">·</span>
-    <span class="marquee-item">Python & Pandas</span>
-    <span class="marquee-item accent">·</span>
-    <span class="marquee-item">RAG Pipelines</span>
-    <span class="marquee-item accent">·</span>
-    <span class="marquee-item">Exploratory Data Analysis</span>
-    <span class="marquee-item accent">·</span>
-    <span class="marquee-item">Data Analysis</span>
-    <span class="marquee-item accent">·</span>
-    <span class="marquee-item">Power BI Dashboards</span>
-    <span class="marquee-item accent">·</span>
-    <span class="marquee-item">Python & Pandas</span>
-    <span class="marquee-item accent">·</span>
-    <span class="marquee-item">RAG Pipelines</span>
-    <span class="marquee-item accent">·</span>
-    <span class="marquee-item">Exploratory Data Analysis</span>
-    <span class="marquee-item accent">·</span>
-  </div>
-</div>
 
 <!-- ABOUT / STORY -->
 <section id="about">
   <div class="story-ambient-num">01</div>
   <div class="about-inner">
+
+    <!-- LEFT: Portrait + floating cards -->
+    <div class="about-left reveal">
+      <div class="about-img-wrap">
+        <div class="about-img-frame">
+          <div class="about-img-inner">
+            <div class="about-img-placeholder">PC</div>
+          </div>
+          <div class="about-corner-br"></div>
+        </div>
+        <!-- Floating location card -->
+        <div class="about-float-card card-loc">
+          <span class="loc-dot"></span>
+          <span class="loc-text">Hyderabad, India</span>
+        </div>
+        <!-- Floating availability card -->
+        <div class="about-float-card card-avail">
+          <span class="avail-label">Status</span>
+          <span class="avail-status">Open to Work</span>
+        </div>
+        <!-- Decorative offset frame -->
+        <div class="about-img-deco-line"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Text content -->
     <div class="about-right">
       <div class="section-label reveal">01 — About</div>
       <h2 class="about-heading">
@@ -1986,6 +2079,7 @@
         <span>Download Résumé</span>
       </a>
     </div>
+
   </div>
 </section>
 
@@ -3302,6 +3396,32 @@
 
   const TIMELINE = [
     {
+      period: '2025',
+      role: 'Prompt Engineering with GitHub Copilot',
+      company: 'Google',
+      type: 'Certification',
+      color: '#D6B48A',
+      points: [
+        'Advanced prompt design patterns',
+        'AI-assisted development workflows',
+        'Practical GitHub Copilot integration techniques',
+      ],
+      tags: ['Prompt Engineering', 'AI', 'GitHub Copilot'],
+    },
+    {
+      period: '2023 – 2026',
+      role: 'Bachelor of Computer Applications',
+      company: 'Osmania University · CGPA 8.1',
+      type: 'Education',
+      color: '#C08457',
+      points: [
+        'Focused on data structures, algorithms, and web development',
+        'Completed AI/ML and data science coursework',
+        'Maintained CGPA of 8.1 across all semesters',
+      ],
+      tags: ['BCA', 'Osmania University', 'CGPA 8.1', 'Ongoing'],
+    },
+    {
       period: 'Apr 2024 – Jun 2025',
       role: 'Software Development Intern',
       company: 'Alpha Radius Education Technologies',
@@ -3316,20 +3436,7 @@
       tags: ['Python', 'SQL', 'Power BI', 'HTML/CSS/JS'],
     },
     {
-      period: '2023 – 2026',
-      role: 'Bachelor of Computer Applications',
-      company: 'Osmania University · CGPA 8.1',
-      type: 'Education',
-      color: '#C08457',
-      points: [
-        'Focused on data structures, algorithms, and web development',
-        'Completed AI/ML and data science coursework',
-        'Maintained CGPA of 8.1 across all semesters',
-      ],
-      tags: ['BCA', 'Osmania University', 'CGPA 8.1'],
-    },
-    {
-      period: '2024',
+      period: '2026',
       role: 'Data Science & AI Certification',
       company: 'Naresh IT',
       type: 'Certification',
@@ -3340,19 +3447,6 @@
         'Real-world data projects and case studies',
       ],
       tags: ['Python', 'ML', 'Data Science'],
-    },
-    {
-      period: '2024',
-      role: 'Prompt Engineering with GitHub Copilot',
-      company: 'Google',
-      type: 'Certification',
-      color: '#D6B48A',
-      points: [
-        'Advanced prompt design patterns',
-        'AI-assisted development workflows',
-        'Practical GitHub Copilot integration techniques',
-      ],
-      tags: ['Prompt Engineering', 'AI', 'GitHub Copilot'],
     },
   ];
 
